@@ -4,7 +4,12 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from flask_cors import CORS
 import os
+
+
+# Enable CORS for your app
+CORS(app)
 
 # Load environment variables from .env file
 load_dotenv()
