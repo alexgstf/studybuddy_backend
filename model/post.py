@@ -6,6 +6,28 @@ from sqlalchemy.exc import IntegrityError
 from __init__ import app, db
 from model.user import User
 from model.channel import Channel
+from flask import request, jsonify
+
+@app.route('/api/posts', methods=['POST'])
+def create_post():
+    try:
+        data = request.json
+        title = data.get("title")
+        comment = data.get("comment")
+        content = data.get("content")
+        user_id = data.get("user_id")
+        channel_id = data.get("channel_id")
+
+        if not all([title, comment, content, user_id, channel_id]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        new_post = Post(title=title, comment=comment, user_id=user_id, channel_id=channel_id, content=content)
+        new_post.create()
+
+        return jsonify(new_post.read()), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 class Post(db.Model):
     """

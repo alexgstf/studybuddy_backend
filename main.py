@@ -10,8 +10,6 @@ from flask import current_app
 from werkzeug.security import generate_password_hash
 import shutil
 
-
-
 # import "objects" from "this" project
 from __init__ import app, db, login_manager  # Key Flask objects 
 # API endpoints
@@ -28,6 +26,7 @@ from api.carphoto import car_api
 from api.carChat import car_chat_api
 from api.student import student_api
 from api.chatroom import chatroom_api
+
 
 
 from api.vote import vote_api
@@ -58,6 +57,8 @@ app.register_blueprint(vote_api)
 app.register_blueprint(car_api)
 app.register_blueprint(student_api)
 app.register_blueprint(chatroom_api, url_prefix='/api/chatroom')
+
+
 
 
 # Tell Flask-Login the view function name of your login route
