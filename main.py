@@ -26,6 +26,7 @@ from api.carphoto import car_api
 from api.carChat import car_chat_api
 from api.student import student_api
 from api.chatroom import chatroom_api
+from api.facts import facts_api
 
 
 
@@ -57,6 +58,7 @@ app.register_blueprint(vote_api)
 app.register_blueprint(car_api)
 app.register_blueprint(student_api)
 app.register_blueprint(chatroom_api, url_prefix='/api/chatroom')
+app.register_blueprint(facts_api)
 
 
 
