@@ -62,7 +62,6 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
    
     posts = db.relationship('Post', backref='author', lazy=True)
                                  
-    
     def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?'): # allows us to build this class which is a template
         """
         Constructor, 1st step in object creation.
