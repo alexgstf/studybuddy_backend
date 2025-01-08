@@ -511,7 +511,7 @@ def initUsers():
         u5 = User(name='Darsh Darsh' , uid='darsh' , password='darshdarsh')
         u6 = User(name='ALejandro Rubio' , uid='alejandro' , password='alejandro')
         
-        users = [u1, u2, u3, u4]
+        users = [u1, u2, u3, u4, u5, u6]
         
         for user in users:
             try:
