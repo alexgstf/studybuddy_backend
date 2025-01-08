@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
 
-from __init__ import app, db
+from __init__ import app, db #imported and used in other places
 
 """ Helper Functions """
 
@@ -31,7 +31,7 @@ def default_year():
 
 ''' Tutorial: https://www.sqlalchemy.org/library.html#tutorials, try to get into Python shell and follow along '''
 
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin): #Class is used to store the information or code that we need.
     """
     User Model
 
@@ -50,7 +50,7 @@ class User(db.Model, UserMixin):
         _pfp (Column): A string representing the path to the user's profile picture. It can be null.
     """
     __tablename__ = 'users'
-
+# code starting from here is within the class and allows us to push things in and pull things out
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
     _uid = db.Column(db.String(255), unique=True, nullable=False)
@@ -63,7 +63,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
                                  
     
-    def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?'):
+    def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?'): # allows us to build this class which is a template
         """
         Constructor, 1st step in object creation.
         

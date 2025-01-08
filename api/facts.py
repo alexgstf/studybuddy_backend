@@ -10,7 +10,7 @@ API_URL = 'https://api.api-ninjas.com/v1/facts'
 
 def fetch_fact_from_api():
     """
-    Fetch a random fact from the external API.
+    Fetch a random fact from the external API (API Ninja).
     """
     headers = {'X-Api-Key': API_KEY}
     try:
@@ -26,8 +26,9 @@ def fetch_fact_from_api():
 @facts_api.route('/api/funfacts/random', methods=['GET'])
 def random_fact():
     """
-    Endpoint to return a random fun fact.
+    Endpoint to return a random fun fact from API Ninja.
     """
     fact = fetch_fact_from_api()
     return jsonify({"fact": fact})
+
 
