@@ -509,6 +509,7 @@ def initUsers():
         u3 = User(name='Nicholas Tesla', uid='niko', password='123niko', pfp='niko.png' )
         u4 = User(name='Albert Einstein', uid='albert', password='123albert')
         u5 = User(name='Darsh Darsh' , uid='darsh' , password='darshdarsh')
+        u6 = User(name='Marti Jorba', uid='marti', password='martijorba')
         users = [u1, u2, u3, u4]
         
         for user in users:
