@@ -507,7 +507,7 @@ def initUsers():
         u1 = User(name='Thomas Edison', uid=app.config['ADMIN_USER'], password=app.config['ADMIN_PASSWORD'], pfp='toby.png', car='toby_car.png', role="Admin")
         u2 = User(name='Grace Hopper', uid=app.config['DEFAULT_USER'], password=app.config['DEFAULT_PASSWORD'], pfp='hop.png')
         u3 = User(name='Nicholas Tesla', uid='niko', password='123niko', pfp='niko.png' )
-        u4 = User(name='Albert Einstein', uid='albert', password='123albert')
+        u4 = User(name='Alex Gustaf', uid='alex', password='123alex')
         u5 = User(name='Darsh Darsh' , uid='darsh' , password='darshdarsh')
         users = [u1, u2, u3, u4]
         
