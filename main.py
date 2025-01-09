@@ -65,6 +65,7 @@ app.register_blueprint(quiz_api)
 
 
 
+
 # Tell Flask-Login the view function name of your login route
 login_manager.login_view = "login"
 

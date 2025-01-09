@@ -1,33 +1,32 @@
-import requests
 from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
+import random
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins='*')
 
-API_KEY = 'wst0VfOlvrz1Ez8qZ0kwlA==ieAYvEeSNj6O7jNx'  # API key from API Ninja
-API_URL = 'https://api.api-ninjas.com/v1/facts'
+# Sample facts stored in a list
+FACTS = [
+    "Bananas are berries, but strawberries are not.",
+    "Honey never spoils; archaeologists have found 3,000-year-old honey that is still edible.",
+    "Octopuses have three hearts and blue blood.",
+    "Sharks existed before trees.",
+    "A day on Venus is longer than a year on Venus.",
+    "There are more stars in the universe than grains of sand on all the Earth's beaches.",
+    "Sloths can hold their breath longer than dolphins can."
+]
 
 # Create a blueprint for facts
 facts_api = Blueprint('facts_api', __name__)
 
-def fetch_fact_from_api():
-    """Fetch a random fact from the API Ninja service"""
-    headers = {'X-Api-Key': API_KEY}
-    try:
-        response = requests.get(API_URL, headers=headers)
-        if response.status_code == 200:
-            fact_data = response.json()
-            return fact_data[0]['fact'] if fact_data else 'No fact available at the moment.'
-        else:
-            return f'Failed to fetch fact. Status code: {response.status_code}'
-    except Exception as e:
-        return f'Error: {str(e)}'
+def fetch_fact_from_json():
+    """Fetch a random fact from the local JSON data"""
+    return random.choice(FACTS)
 
 @facts_api.route('/api/funfacts/random', methods=['GET'])
 def random_fact():
     """API endpoint to return a random fun fact"""
-    fact = fetch_fact_from_api()
+    fact = fetch_fact_from_json()
     return jsonify({"fact": fact})
 
 # Register the facts_api blueprint
@@ -64,5 +63,6 @@ def home_page():
     </body>
     </html>
     """
+
 if __name__ == '__main__':
     app.run(port=5001)
