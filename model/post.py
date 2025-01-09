@@ -1,10 +1,33 @@
+# post.py
 import logging
 from sqlite3 import IntegrityError
 from sqlalchemy import Text, JSON
 from sqlalchemy.exc import IntegrityError
-from __init__ import db
+from __init__ import app, db
 from model.user import User
 from model.channel import Channel
+from flask import request, jsonify
+
+@app.route('/api/posts', methods=['POST'])
+def create_post():
+    try:
+        data = request.json
+        title = data.get("title")
+        comment = data.get("comment")
+        content = data.get("content")
+        user_id = data.get("user_id")
+        channel_id = data.get("channel_id")
+
+        if not all([title, comment, content, user_id, channel_id]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        new_post = Post(title=title, comment=comment, user_id=user_id, channel_id=channel_id, content=content)
+        new_post.create()
+
+        return jsonify(new_post.read()), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 class Post(db.Model):
     """
@@ -25,11 +48,11 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     _title = db.Column(db.String(255), nullable=False)
     _comment = db.Column(db.String(255), nullable=False)
-    _content = db.Column(JSON, nullable=False, default={})
+    _content = db.Column(JSON, nullable=False)
     _user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     _channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable=False)
 
-    def __init__(self, title, comment, user_id=None, channel_id=None, content=None, user_name=None, channel_name=None):
+    def __init__(self, title, comment, user_id=None, channel_id=None, content={}, user_name=None, channel_name=None):
         """
         Constructor, 1st step in object creation.
         
@@ -44,7 +67,7 @@ class Post(db.Model):
         self._comment = comment
         self._user_id = user_id
         self._channel_id = channel_id
-        self._content = content or {}
+        self._content = content
 
     def __repr__(self):
         """
@@ -61,7 +84,7 @@ class Post(db.Model):
         Creates a new post in the database.
         
         Returns:
-            Post: The created post object, or raises an exception on error.
+            Post: The created post object, or None on error.
         """
         try:
             db.session.add(self)
@@ -69,11 +92,7 @@ class Post(db.Model):
         except IntegrityError as e:
             db.session.rollback()
             logging.warning(f"IntegrityError: Could not create post with title '{self._title}' due to {str(e)}.")
-            raise ValueError("Failed to create post due to database integrity error")
-        except Exception as e:
-            db.session.rollback()
-            logging.error(f"Unexpected error: {str(e)}")
-            raise ValueError("An unexpected error occurred while creating the post.")
+            return None
         return self
         
     def read(self):
@@ -97,20 +116,41 @@ class Post(db.Model):
             "channel_name": channel.name if channel else None
         }
         return data
+    
 
-    def update(self, title=None, content=None, channel_id=None, user_id=None):
+    def update(self):
         """
         Updates the post object with new data.
         
         Args:
-            title (str): The new title for the post.
-            content (dict): The new content of the post.
-            channel_id (int): The new channel id for the post.
-            user_id (int): The new user id for the post.
+            inputs (dict): A dictionary containing the new data for the post.
         
         Returns:
-            Post: The updated post object, or raises an exception on error.
+            Post: The updated post object, or None on error.
         """
+        
+        inputs = Post.query.get(self.id)
+        
+        title = inputs._title
+        content = inputs._content
+        channel_id = inputs._channel_id
+        user_name = User.query.get(inputs._user_id).name if inputs._user_id else None
+        channel_name = Channel.query.get(inputs._channel_id).name if inputs._channel_id else None
+
+        # If channel_name is provided, look up the corresponding channel_id
+        if channel_name:
+            channel = Channel.query.filter_by(_name=channel_name).first()
+            if channel:
+                channel_id = channel.id
+                
+        if user_name:
+            user = User.query.filter_by(_name=user_name).first()
+            if user:
+                user_id = user.id
+            else:
+                return None
+
+        # Update table with new data
         if title:
             self._title = title
         if content:
@@ -124,12 +164,8 @@ class Post(db.Model):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
-            logging.warning(f"IntegrityError: Could not update post with title '{self._title}' due to missing channel_id.")
-            raise ValueError("Failed to update post due to integrity error")
-        except Exception as e:
-            db.session.rollback()
-            logging.error(f"Unexpected error: {str(e)}")
-            raise ValueError("An unexpected error occurred while updating the post.")
+            logging.warning(f"IntegrityError: Could not update post with title '{title}' due to missing channel_id.")
+            return None
         return self
     
     def delete(self):
@@ -147,8 +183,7 @@ class Post(db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            logging.error(f"Error deleting post: {str(e)}")
-            raise ValueError("An unexpected error occurred while deleting the post.")
+            raise e
         
     @staticmethod
     def restore(data):
@@ -160,6 +195,7 @@ class Post(db.Model):
                 post.update(post_data)
             else:
                 post = Post(**post_data)
+                post.update(post_data)
                 post.create()
         
 def initPosts():
