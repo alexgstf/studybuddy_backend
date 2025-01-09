@@ -2,8 +2,6 @@ from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
 
 quiz_api = Blueprint('quiz_api', __name__, url_prefix='/api')
 api = Api(quiz_api)
@@ -58,7 +56,4 @@ class QuizAPI:
     api.add_resource(_AllStats, '/stats')
     api.add_resource(_SubmitQuiz, '/submit')
 
-app.register_blueprint(quiz_api)
 
-if __name__ == '__main__':
-    app.run(debug=True)
