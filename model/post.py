@@ -11,23 +11,31 @@ from flask import request, jsonify
 @app.route('/api/posts', methods=['POST'])
 def create_post():
     try:
-        data = request.json
-        title = data.get("title")
-        comment = data.get("comment")
-        content = data.get("content")
-        user_id = data.get("user_id")
-        channel_id = data.get("channel_id")
+        data = request.get_json()
+        
+        # Validate input data
+        required_fields = ["title", "comment", "content", "user_id", "channel_id"]
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
 
-        if not all([title, comment, content, user_id, channel_id]):
-            return jsonify({"error": "Missing required fields"}), 400
-
-        new_post = Post(title=title, comment=comment, user_id=user_id, channel_id=channel_id, content=content)
-        new_post.create()
+        # Create post
+        new_post = Post(
+            title=data["title"],
+            comment=data["comment"],
+            content=data["content"],
+            user_id=data["user_id"],
+            channel_id=data["channel_id"]
+        )
+        created_post = new_post.create()
+        if not created_post:
+            return jsonify({"error": "Failed to create post due to a database error"}), 500
 
         return jsonify(new_post.read()), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
 class Post(db.Model):
     """
