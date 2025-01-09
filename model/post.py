@@ -3,7 +3,7 @@ import logging
 from sqlite3 import IntegrityError
 from sqlalchemy import Text, JSON
 from sqlalchemy.exc import IntegrityError
-from __init__ import app, db
+from studybuddy_backend import db
 from model.user import User
 from model.channel import Channel
 from flask import request, jsonify

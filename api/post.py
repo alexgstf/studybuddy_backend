@@ -4,8 +4,9 @@ from flask_restful import Api, Resource  # used for REST API building
 from datetime import datetime
 from studybuddy_backend import app
 from api.jwt_authorize import token_required
-from model.post import Post
-from model.channel import Channel
+from studybuddy_backend.model.post import Post
+from studybuddy_backend.model.channel import Channel
+
 
 """
 This Blueprint object is used to define APIs for the Post model.
