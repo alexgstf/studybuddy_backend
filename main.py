@@ -143,20 +143,24 @@ def delete_user(user_id):
         return jsonify({'message': 'User deleted successfully'}), 200
     return jsonify({'error': 'User not found'}), 404
 
-@app.route('/users/reset_password/<int:user_id>', methods=['POST'])
+@app.route('/users/verify/<int:user_id>', methods=['POST'])
 @login_required
-def reset_password(user_id):
+def verify_user(user_id):
     if current_user.role != 'Admin':
         return jsonify({'error': 'Unauthorized'}), 403
     
     user = User.query.get(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-
-    # Set the new password
-    if user.update({"password": app.config['DEFAULT_PASSWORD']}):
-        return jsonify({'message': 'Password reset successfully'}), 200
-    return jsonify({'error': 'Password reset failed'}), 500
+    
+    # Assuming you have a verification_token field and a flag for is_verified
+    if user.verification_token == request.json.get('token'):  # Check if the token matches the one provided in the request
+        user.is_verified = True  # Set the user as verified
+        user.verification_token = None  # Optionally clear the token after verification
+        db.session.commit()  # Commit the changes to the database
+        return jsonify({'message': 'User verified successfully'}), 200
+    else:
+        return jsonify({'error': 'Invalid token'}), 400
 
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
