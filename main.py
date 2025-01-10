@@ -30,6 +30,7 @@ from api.facts import facts_api
 from api.quiz import quiz_api
 from api.tasks import tasks_api
 from api.quotes import quotes_api
+from api.chattopics import topics_api
 
 
 from api.vote import vote_api
@@ -64,6 +65,7 @@ app.register_blueprint(facts_api)
 app.register_blueprint(quiz_api)
 app.register_blueprint(tasks_api)
 app.register_blueprint(quotes_api)
+app.register_blueprint(topics_api)
 
 
 
