@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify
-import random
 
 # Create a blueprint for tasks
 topics_api = Blueprint('topics', __name__)
