@@ -19,7 +19,7 @@ class StudyBuddyUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), nullable=False, unique=True)
     _email = db.Column(db.String(255), nullable=False, unique=True)
-    _date_of_birth = db.Column(db.Date, nullable=False)
+    _date_of_birth = db.Column(db.String(255), nullable=False)
     _city = db.Column(db.String(255), nullable=False)
 
     def __init__(self, name, email, date_of_birth, city):

@@ -175,7 +175,7 @@ def generate_data():
     initUsers()
     initSections()
     initGroups()
-    initChannels()
+    # initChannels()
     initPosts()
     initStuddyBuddy()
     initVotes()
