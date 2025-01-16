@@ -13,7 +13,7 @@ class Task(db.Model):
         _user_id (db.Column): An integer representing the user who created the post.
         _group_id (db.Column): An integer representing the group to which the post belongs.
     """
-    __tablename__ = 'tasks'
+    __tablename__ = 'user_tasks'
     id = db.Column(db.Integer, primary_key=True)
     _task = db.Column(db.String(255), nullable=False, unique=True)
 
@@ -94,8 +94,8 @@ class Task(db.Model):
     def restore(data):
         for sbuser_data in data:
             _ = sbuser_data.pop('id', None)
-            name = sbuser_data.get("name", None)
-            sbuser = Task.query.filter_by(_name=name).first()
+            task = sbuser_data.get("task", None)
+            sbuser = Task.query.filter_by(_task=task).first()
             if sbuser:
                 sbuser.update(sbuser_data)
             else:

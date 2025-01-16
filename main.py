@@ -223,7 +223,7 @@ def extract_data():
         data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
         data['user_quotes'] = [sbuser.read() for sbuser in Quotes.query.all()]
         data['user_statistics'] = [sbuser.read() for sbuser in Statistics.query.all()]
-        data['tasks'] = [sbuser.read() for sbuser in Task.query.all()]
+        data['user_tasks'] = [sbuser.read() for sbuser in Task.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -238,7 +238,7 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users', 'user_facts', 'user_quotes', 'user_statistics', 'tasks']:
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users', 'user_facts', 'user_quotes', 'user_statistics', 'user_tasks']:
         with open(os.path.join(directory, f'{table}.json'), 'r') as f:
             data[table] = json.load(f)
     return data
@@ -255,7 +255,7 @@ def restore_data(data):
         _ = Facts.restore(data['user_facts'])
         _ = Quotes.restore(data['user_quotes'])
         _ = Statistics.restore(data['user_statistics'])
-        _ = Task.restore(data['tasks'])
+        _ = Task.restore(data['user_tasks'])
     print("Data restored to the new database.")
 
 # Define a command to backup data
