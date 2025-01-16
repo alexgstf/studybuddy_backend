@@ -4,7 +4,7 @@ from __init__ import app, db
 from model.user import User
 from model.group import Group
 
-class StudyBuddyUser(db.Model):
+class Facts(db.Model):
     """
     NestPost Model
     The Post class represents an individual contribution or discussion within a group.
@@ -15,14 +15,13 @@ class StudyBuddyUser(db.Model):
         _user_id (db.Column): An integer representing the user who created the post.
         _group_id (db.Column): An integer representing the group to which the post belongs.
     """
-    __tablename__ = 'study_buddy_users'
+    __tablename__ = 'user_facts'
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), nullable=False, unique=True)
-    _email = db.Column(db.String(255), nullable=False, unique=True)
-    _date_of_birth = db.Column(db.String(255), nullable=False)
-    _city = db.Column(db.String(255), nullable=False)
-
-    def __init__(self, name, email, date_of_birth, city):
+    _fact = db.Column(db.String(255), nullable=False, unique=True)
+   
+   
+    def __init__(self, name, fact):
         """
         Constructor, 1st step in object creation.
         Args:
@@ -33,9 +32,7 @@ class StudyBuddyUser(db.Model):
             image_url (str): The url path to the image
         """
         self._name = name
-        self._email = email
-        self._date_of_birth = date_of_birth
-        self._city = city
+        self._fact = fact
     # def __repr__(self):
     #     """
     #     The __repr__ method is a special method used to represent the object in a string format.
@@ -70,11 +67,8 @@ class StudyBuddyUser(db.Model):
         data = {
             "id": self.id,
             "name": self._name,
-            "email": self._email,
-            "user_name": user.name if user else None,
-            # Review information as this may not work as this is a quick workaround
-            "date_of_birth": self._date_of_birth,
-            "city": self._city
+            "fact": self._fact,
+            
         }
         return data
     def update(self):
@@ -105,7 +99,7 @@ class StudyBuddyUser(db.Model):
             db.session.rollback()
             raise e
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
-def initStuddyBuddy():
+def initfacts():
     """
     The initPosts function creates the Post table and adds tester data to the table.
     Uses:
@@ -119,10 +113,10 @@ def initStuddyBuddy():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = StudyBuddyUser(name='Alice', email='alice@example.com', date_of_birth='1990-01-01', city='New York')
-        p2 = StudyBuddyUser(name='Bob', email='bob@example.com', date_of_birth='1985-05-12', city='Los Angeles')
-        p3 = StudyBuddyUser(name='Charlie', email='charlie@example.com', date_of_birth='1992-08-23', city='Chicago')
-        p4 = StudyBuddyUser(name='Diana', email='diana@example.com', date_of_birth='1988-11-30', city='Houston')
+        p1 = Facts(name='Alice', fact='Apples are green or red')
+        p2 = Facts(name='Bob',fact='Honey never spoils')
+        p3 = Facts(name='Charlie',fact='The moon is made of cheese')
+        p4 = Facts(name='Diana',fact='The earth is flat')
         for post in [p1, p2, p3, p4]:
             try:
                 post.create()
