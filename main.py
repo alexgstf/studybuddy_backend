@@ -48,6 +48,7 @@ from model.database import StudyBuddyUser, initStuddyBuddy # Justin added this, 
 from model.vote import Vote, initVotes
 from model.factsbase import Facts, initfacts
 from model.quotesbase import Quotes, initquotes
+from model.quizbase import Statistics, initstats
 
 # server only Views
 
@@ -190,6 +191,7 @@ def generate_data():
     initVotes()
     initfacts()
     initquotes()
+    initstats()
     
 # Backup the old database
 def backup_database(db_uri, backup_uri):
@@ -214,6 +216,7 @@ def extract_data():
         data['study_buddy_users'] = [sbuser.read() for sbuser in StudyBuddyUser.query.all()]
         data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
         data['user_quotes'] = [sbuser.read() for sbuser in Quotes.query.all()]
+        data['user_statistcs'] = [sbuser.read() for sbuser in Statistics.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -244,6 +247,7 @@ def restore_data(data):
         _ = StudyBuddyUser.restore(data['study_buddy_users'])
         _ = Facts.restore(data['user_facts'])
         _ = Quotes.restore(data['user_quotes'])
+        _ = Statistics.restore(data['user_statistics'])
     print("Data restored to the new database.")
 
 # Define a command to backup data
