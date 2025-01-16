@@ -15,7 +15,7 @@ class StudyBuddyUser(db.Model):
         _user_id (db.Column): An integer representing the user who created the post.
         _group_id (db.Column): An integer representing the group to which the post belongs.
     """
-    __tablename__ = 'users'
+    __tablename__ = 'study_buddy_users'
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), nullable=False, unique=True)
     _email = db.Column(db.String(255), nullable=False, unique=True)
@@ -105,7 +105,7 @@ class StudyBuddyUser(db.Model):
             db.session.rollback()
             raise e
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
-def initNestPosts():
+def initStuddyBuddy():
     """
     The initPosts function creates the Post table and adds tester data to the table.
     Uses:
