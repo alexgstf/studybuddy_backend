@@ -32,6 +32,7 @@ from api.tasks import tasks_api
 from api.quotes import quotes_api
 from api.chattopics import topics_api
 from api.addsbuser import sbuserapi
+from api.facts_api import userfacts
 
 
 from api.vote import vote_api
@@ -44,6 +45,8 @@ from model.channel import Channel, initChannels
 from model.post import Post, initPosts
 from model.database import StudyBuddyUser, initStuddyBuddy # Justin added this, custom format for his website
 from model.vote import Vote, initVotes
+from model.factsbase import Facts, initfacts
+
 # server only Views
 
 # register URIs for api endpoints
@@ -68,6 +71,7 @@ app.register_blueprint(tasks_api)
 app.register_blueprint(quotes_api)
 app.register_blueprint(topics_api)
 app.register_blueprint(sbuserapi)
+app.register_blueprint(userfacts)
 
 
 
@@ -181,6 +185,7 @@ def generate_data():
     initPosts()
     initStuddyBuddy()
     initVotes()
+    initfacts()
     
 # Backup the old database
 def backup_database(db_uri, backup_uri):
