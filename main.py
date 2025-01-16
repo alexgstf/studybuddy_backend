@@ -212,7 +212,7 @@ def extract_data():
         data['sections'] = [section.read() for section in Section.query.all()]
         data['groups'] = [group.read() for group in Group.query.all()]
         data['channels'] = [channel.read() for channel in Channel.query.all()]
-        #data['posts'] = [post.read() for post in Post.query.all()]
+        data['posts'] = [post.read() for post in Post.query.all()]
         data['study_buddy_users'] = [sbuser.read() for sbuser in StudyBuddyUser.query.all()]
         data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
         data['user_quotes'] = [sbuser.read() for sbuser in Quotes.query.all()]
