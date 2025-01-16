@@ -216,7 +216,7 @@ def extract_data():
         data['study_buddy_users'] = [sbuser.read() for sbuser in StudyBuddyUser.query.all()]
         data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
         data['user_quotes'] = [sbuser.read() for sbuser in Quotes.query.all()]
-        data['user_statistcs'] = [sbuser.read() for sbuser in Statistics.query.all()]
+        data['user_statistics'] = [sbuser.read() for sbuser in Statistics.query.all()]
     return data
 
 # Save extracted data to JSON files
