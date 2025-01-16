@@ -15,7 +15,11 @@ def add_user():
         return jsonify({'error': 'Missing data'}), 400
 
     new_user = StudyBuddyUser(name=name, email=email, date_of_birth=date_of_birth, city=city)
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
     return jsonify({'message': 'User added successfully'}), 201
