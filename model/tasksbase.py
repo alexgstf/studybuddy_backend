@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 from __init__ import app, db
 from model.user import User
 
-class StudyBuddyUser(db.Model):
+class Taskbase(db.Model):
     """
     NestPost Model
     The Post class represents an individual contribution or discussion within a group.
@@ -13,7 +13,7 @@ class StudyBuddyUser(db.Model):
         _user_id (db.Column): An integer representing the user who created the post.
         _group_id (db.Column): An integer representing the group to which the post belongs.
     """
-    __tablename__ = 'study_buddy_users'
+    __tablename__ = 'task_base'
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), nullable=False, unique=True)
     _email = db.Column(db.String(255), nullable=False, unique=True)
@@ -104,11 +104,11 @@ class StudyBuddyUser(db.Model):
         for sbuser_data in data:
             _ = sbuser_data.pop('id', None)
             name = sbuser_data.get("name", None)
-            sbuser = StudyBuddyUser.query.filter_by(_name=name).first()
+            sbuser = Taskbase.query.filter_by(_name=name).first()
             if sbuser:
                 sbuser.update(sbuser_data)
             else:
-                sbuser = StudyBuddyUser(**sbuser_data)
+                sbuser = Taskbase(**sbuser_data)
                 sbuser.update(sbuser_data)
                 sbuser.create()
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
@@ -126,10 +126,10 @@ def initStuddyBuddy():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = StudyBuddyUser(name='Alice', email='alice@example.com', date_of_birth='1990-01-01', city='New York')
-        p2 = StudyBuddyUser(name='Bob', email='bob@example.com', date_of_birth='1985-05-12', city='Los Angeles')
-        p3 = StudyBuddyUser(name='Charlie', email='charlie@example.com', date_of_birth='1992-08-23', city='Chicago')
-        p4 = StudyBuddyUser(name='Diana', email='diana@example.com', date_of_birth='1988-11-30', city='Houston')
+        p1 = Taskbase(tasks='Review the key concepts from your last lesson.')
+        p2 = Taskbase(tasks='Read an article or a chapter from your textbook.')
+        p3 = Taskbase(tasks='Practice solving math problems for 30 minutes.')
+        p4 = Taskbase(tasks='Write a summary of what you learned today.')
         for post in [p1, p2, p3, p4]:
             try:
                 post.create()
