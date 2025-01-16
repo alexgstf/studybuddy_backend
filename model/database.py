@@ -1,8 +1,6 @@
 from sqlite3 import IntegrityError
-from sqlalchemy import Text
 from __init__ import app, db
 from model.user import User
-from model.group import Group
 
 class StudyBuddyUser(db.Model):
     """
@@ -43,7 +41,7 @@ class StudyBuddyUser(db.Model):
         Returns:
             str: A text representation of how to create the object.
         """
-        return f"Post(id={self.id}, title={self._name}, content={self._email}, user_id={self._date_of_birth}, post_id={self._city})"
+        return f"User(id={self.id}, name={self._name}, email={self._email}, dob={self._date_of_birth}, city={self._city})"
     def create(self):
         """
         The create method adds the object to the database and commits the transaction.
@@ -66,18 +64,15 @@ class StudyBuddyUser(db.Model):
         Returns:
             dict: A dictionary containing the post data, including user and group names.
         """
-        user = User.query.get(self._user_id)
         data = {
             "id": self.id,
             "name": self._name,
             "email": self._email,
-            "user_name": user.name if user else None,
-            # Review information as this may not work as this is a quick workaround
             "date_of_birth": self._date_of_birth,
             "city": self._city
         }
         return data
-    def update(self):
+    def update(self, users):
         """
         The update method commits the transaction to the database.
         Uses:
@@ -104,6 +99,18 @@ class StudyBuddyUser(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+    @staticmethod
+    def restore(data):
+        for sbuser_data in data:
+            _ = sbuser_data.pop('id', None)
+            name = sbuser_data.get("name", None)
+            sbuser = StudyBuddyUser.query.filter_by(_name=name).first()
+            if sbuser:
+                sbuser.update(sbuser_data)
+            else:
+                sbuser = StudyBuddyUser(**sbuser_data)
+                sbuser.update(sbuser_data)
+                sbuser.create()
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
 def initStuddyBuddy():
     """
