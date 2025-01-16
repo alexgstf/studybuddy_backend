@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 from __init__ import app, db
 from model.user import User
 
-class Taskbase(db.Model):
+class Task(db.Model):
     """
     NestPost Model
     The Post class represents an individual contribution or discussion within a group.
@@ -13,14 +13,11 @@ class Taskbase(db.Model):
         _user_id (db.Column): An integer representing the user who created the post.
         _group_id (db.Column): An integer representing the group to which the post belongs.
     """
-    __tablename__ = 'task_base'
+    __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
-    _name = db.Column(db.String(255), nullable=False, unique=True)
-    _email = db.Column(db.String(255), nullable=False, unique=True)
-    _date_of_birth = db.Column(db.String(255), nullable=False)
-    _city = db.Column(db.String(255), nullable=False)
+    _task = db.Column(db.String(255), nullable=False, unique=True)
 
-    def __init__(self, name, email, date_of_birth, city):
+    def __init__(self, task):
         """
         Constructor, 1st step in object creation.
         Args:
@@ -30,10 +27,7 @@ class Taskbase(db.Model):
             group_id (int): The group to which the post belongs.
             image_url (str): The url path to the image
         """
-        self._name = name
-        self._email = email
-        self._date_of_birth = date_of_birth
-        self._city = city
+        self._task = task
     def __repr__(self):
         """
         The __repr__ method is a special method used to represent the object in a string format.
@@ -41,7 +35,7 @@ class Taskbase(db.Model):
         Returns:
             str: A text representation of how to create the object.
         """
-        return f"User(id={self.id}, name={self._name}, email={self._email}, dob={self._date_of_birth}, city={self._city})"
+        return f"Task(id={self._task})"
     def create(self):
         """
         The create method adds the object to the database and commits the transaction.
@@ -66,10 +60,7 @@ class Taskbase(db.Model):
         """
         data = {
             "id": self.id,
-            "name": self._name,
-            "email": self._email,
-            "date_of_birth": self._date_of_birth,
-            "city": self._city
+            "task": self._task,
         }
         return data
     def update(self, users):
@@ -112,7 +103,7 @@ class Taskbase(db.Model):
                 sbuser.update(sbuser_data)
                 sbuser.create()
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
-def initStuddyBuddy():
+def inittasks():
     """
     The initPosts function creates the Post table and adds tester data to the table.
     Uses:
@@ -126,10 +117,10 @@ def initStuddyBuddy():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = Taskbase(tasks='Review the key concepts from your last lesson.')
-        p2 = Taskbase(tasks='Read an article or a chapter from your textbook.')
-        p3 = Taskbase(tasks='Practice solving math problems for 30 minutes.')
-        p4 = Taskbase(tasks='Write a summary of what you learned today.')
+        p1 = Taskbase(task='Review the key concepts from your last lesson.')
+        p2 = Taskbase(task='Read an article or a chapter from your textbook.')
+        p3 = Taskbase(task='Practice solving math problems for 30 minutes.')
+        p4 = Taskbase(task='Write a summary of what you learned today.')
         for post in [p1, p2, p3, p4]:
             try:
                 post.create()

@@ -35,6 +35,7 @@ from api.addsbuser import sbuserapi
 from api.facts_api import userfacts
 from api.quotesdb import userquotes
 from api.quiz_api import userstats
+from api.tasksdata import addtaskapi
 
 
 from api.vote import vote_api
@@ -50,6 +51,7 @@ from model.vote import Vote, initVotes
 from model.factsbase import Facts, initfacts
 from model.quotesbase import Quotes, initquotes
 from model.quizbase import Statistics, initstats
+from model.tasksbase import Task, inittasks
 
 # server only Views
 
@@ -78,6 +80,7 @@ app.register_blueprint(sbuserapi)
 app.register_blueprint(userfacts)
 app.register_blueprint(userquotes)
 app.register_blueprint(userstats)
+app.register_blueprint(addtaskapi)
 
 
 
@@ -194,6 +197,7 @@ def generate_data():
     initfacts()
     initquotes()
     initstats()
+    inittasks()
     
 # Backup the old database
 def backup_database(db_uri, backup_uri):
@@ -219,6 +223,7 @@ def extract_data():
         data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
         data['user_quotes'] = [sbuser.read() for sbuser in Quotes.query.all()]
         data['user_statistics'] = [sbuser.read() for sbuser in Statistics.query.all()]
+        data['tasks'] = [sbuser.read() for sbuser in Task.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -233,7 +238,7 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users', 'user_facts', 'user_quotes', 'user_statistics']:
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users', 'user_facts', 'user_quotes', 'user_statistics', 'tasks']:
         with open(os.path.join(directory, f'{table}.json'), 'r') as f:
             data[table] = json.load(f)
     return data
@@ -250,6 +255,7 @@ def restore_data(data):
         _ = Facts.restore(data['user_facts'])
         _ = Quotes.restore(data['user_quotes'])
         _ = Statistics.restore(data['user_statistics'])
+        _ = Task.restore(data['tasks'])
     print("Data restored to the new database.")
 
 # Define a command to backup data

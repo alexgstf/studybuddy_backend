@@ -18,6 +18,6 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'User added successfully'}), 201
+    return jsonify({'message': 'Quote added successfully'}), 201
 
 
