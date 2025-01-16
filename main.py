@@ -206,8 +206,9 @@ def extract_data():
         data['sections'] = [section.read() for section in Section.query.all()]
         data['groups'] = [group.read() for group in Group.query.all()]
         data['channels'] = [channel.read() for channel in Channel.query.all()]
-        # data['posts'] = [post.read() for post in Post.query.all()]
+        #data['posts'] = [post.read() for post in Post.query.all()]
         data['study_buddy_users'] = [sbuser.read() for sbuser in StudyBuddyUser.query.all()]
+        data['user_facts'] = [sbuser.read() for sbuser in Facts.query.all()]
     return data
 
 # Save extracted data to JSON files
@@ -222,7 +223,7 @@ def save_data_to_json(data, directory='backup'):
 # Load data from JSON files
 def load_data_from_json(directory='backup'):
     data = {}
-    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users']:
+    for table in ['users', 'sections', 'groups', 'channels', 'posts', 'study_buddy_users', 'user_facts']:
         with open(os.path.join(directory, f'{table}.json'), 'r') as f:
             data[table] = json.load(f)
     return data
@@ -234,8 +235,9 @@ def restore_data(data):
         _ = Section.restore(data['sections'])
         _ = Group.restore(data['groups'], users)
         _ = Channel.restore(data['channels'])
-        # _ = Post.restore(data['posts'])
+       # _  = Post.restore(data['posts'])
         _ = StudyBuddyUser.restore(data['study_buddy_users'])
+        _ = Facts.restore(data['user_facts'])
     print("Data restored to the new database.")
 
 # Define a command to backup data

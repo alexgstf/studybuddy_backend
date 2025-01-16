@@ -63,7 +63,7 @@ class Facts(db.Model):
         Returns:
             dict: A dictionary containing the post data, including user and group names.
         """
-        user = User.query.get(self._user_id)
+        
         data = {
             "id": self.id,
             "name": self._name,
@@ -71,7 +71,7 @@ class Facts(db.Model):
             
         }
         return data
-    def update(self):
+    def update(self, users):
         """
         The update method commits the transaction to the database.
         Uses:
@@ -98,6 +98,18 @@ class Facts(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+    @staticmethod
+    def restore(data):
+        for sbuser_data in data:
+            _ = sbuser_data.pop('id', None)
+            name = sbuser_data.get("name", None)
+            sbuser = Facts.query.filter_by(_name=name).first()
+            if sbuser:
+                sbuser.update(sbuser_data)
+            else:
+                sbuser = Facts(**sbuser_data)
+                sbuser.update(sbuser_data)
+                sbuser.create()
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
 def initfacts():
     """

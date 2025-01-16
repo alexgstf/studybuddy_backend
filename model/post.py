@@ -96,7 +96,7 @@ class Post(db.Model):
         return data
     
 
-    def update(self):
+    def update(self, users):
         """
         Updates the post object with new data.
         
