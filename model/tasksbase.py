@@ -95,11 +95,11 @@ class Task(db.Model):
         for sbuser_data in data:
             _ = sbuser_data.pop('id', None)
             name = sbuser_data.get("name", None)
-            sbuser = Taskbase.query.filter_by(_name=name).first()
+            sbuser = Task.query.filter_by(_name=name).first()
             if sbuser:
                 sbuser.update(sbuser_data)
             else:
-                sbuser = Taskbase(**sbuser_data)
+                sbuser = Task(**sbuser_data)
                 sbuser.update(sbuser_data)
                 sbuser.create()
 # No inital data currently, deemed unnecessary at the current moment due to the lack of need in testing
@@ -117,10 +117,10 @@ def inittasks():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = Taskbase(task='Review the key concepts from your last lesson.')
-        p2 = Taskbase(task='Read an article or a chapter from your textbook.')
-        p3 = Taskbase(task='Practice solving math problems for 30 minutes.')
-        p4 = Taskbase(task='Write a summary of what you learned today.')
+        p1 = Task(task='Review the key concepts from your last lesson.')
+        p2 = Task(task='Read an article or a chapter from your textbook.')
+        p3 = Task(task='Practice solving math problems for 30 minutes.')
+        p4 = Task(task='Write a summary of what you learned today.')
         for post in [p1, p2, p3, p4]:
             try:
                 post.create()
