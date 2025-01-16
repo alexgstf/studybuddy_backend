@@ -34,6 +34,7 @@ from api.chattopics import topics_api
 from api.addsbuser import sbuserapi
 from api.facts_api import userfacts
 from api.quotesdb import userquotes
+from api.quiz_api import userstats
 
 
 from api.vote import vote_api
@@ -76,6 +77,7 @@ app.register_blueprint(topics_api)
 app.register_blueprint(sbuserapi)
 app.register_blueprint(userfacts)
 app.register_blueprint(userquotes)
+app.register_blueprint(userstats)
 
 
 
