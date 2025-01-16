@@ -19,6 +19,3 @@ def add_user():
     db.session.commit()
 
     return jsonify({'message': 'User added successfully'}), 201
-
-if __name__ == '__main__':
-    app.run(debug=True)
