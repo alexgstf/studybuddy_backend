@@ -21,7 +21,7 @@ class Quotes(db.Model):
     _quote = db.Column(db.String(255), nullable=False, unique=True)
     _date = db.Column(db.String(255), nullable=True)
    
-    def __init__(self, author, quote, date=None):
+    def __init__(self, author, quote, date):
         """
         Constructor, 1st step in object creation.
         Args:
@@ -69,7 +69,7 @@ class Quotes(db.Model):
             "id": self.id,
             "author": self._author,
             "quote": self._quote,
-            
+            "date": self._date
         }
         return data
     def update(self, users):
