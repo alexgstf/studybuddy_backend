@@ -20,4 +20,17 @@ def add_user():
 
     return jsonify({'message': 'Quote added successfully'}), 201
 
-
+@userquotes.route('/api/userquotes', methods=['GET'])
+def get_quotes():
+    # Fetch all quotes from the database
+    quotes = Quotes.query.all()
+    result = [
+        {
+            'id': quote.id,
+            'author': quote._author,
+            'quote': quote._quote,
+            'date': quote._date
+        }
+        for quote in quotes
+    ]
+    return jsonify(result), 200
