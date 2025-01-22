@@ -18,7 +18,7 @@ class Quotes(db.Model):
     __tablename__ = 'user_quotes'
     id = db.Column(db.Integer, primary_key=True)
     _author = db.Column(db.String(255), nullable=False)
-    _quote = db.Column(db.String(255), nullable=False, unique=True)
+    _quote = db.Column(db.String(255), nullable=False)
     _date = db.Column(db.String(255), nullable=True)
    
     def __init__(self, author, quote, date):
