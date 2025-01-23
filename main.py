@@ -31,7 +31,7 @@ from api.quiz import quiz_api
 from api.tasks import tasks_api
 from api.quotes import quotes_api
 from api.chattopics import topics_api
-from api.addsbuser import sbuserapi
+from api.sbuserapi import sbuserapi
 from api.facts_api import userfacts
 from api.quotesdb import userquotes
 from api.quiz_api import userstats
