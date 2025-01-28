@@ -3,7 +3,7 @@ from model.database import db, StudyBuddyUser
 
 sbuserapi = Blueprint('sbuserapi', __name__)
 
-@sbuserapi.route('/api/addsbuser', methods=['POST'])
+@sbuserapi.route('/api/sbuser', methods=['POST'])
 def add_user():
     data = request.get_json()
     name = data.get('name')
@@ -25,7 +25,7 @@ def add_user():
     return jsonify({'message': 'User added successfully'}), 201
 
 
-@sbuserapi.route('/api/getsbusers', methods=['GET'])
+@sbuserapi.route('/api/sbuser', methods=['GET'])
 def get_sbusers():
     # Fetch all quotes from the database
     sbusers = StudyBuddyUser.query.all()
@@ -41,7 +41,7 @@ def get_sbusers():
     ]
     return jsonify(result), 200
 
-@sbuserapi.route('/api/deletesbuser/<int:id>', methods=['DELETE'])
+@sbuserapi.route('/api/sbuser/<int:id>', methods=['DELETE'])
 def delete_user(id):
     sbuser = StudyBuddyUser.query.get(id)
     if not sbuser:
@@ -51,7 +51,7 @@ def delete_user(id):
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'}), 200
 
-@sbuserapi.route('/api/updatesbuser/<int:id>', methods=['PUT'])
+@sbuserapi.route('/api/sbuser/<int:id>', methods=['PUT'])
 def update_user(id):
     data = request.get_json()
     name = data.get('name')
