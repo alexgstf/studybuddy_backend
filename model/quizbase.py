@@ -19,9 +19,10 @@ class Statistics(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     _xp = db.Column(db.Integer, nullable=False, unique=False)
     _level = db.Column(db.Integer, nullable=False, unique=False)
+    _user = db.Column(db.String(255), unique=False, nullable=False)
    
    
-    def __init__(self, xp, level):
+    def __init__(self, xp, level, user):
         """
         Constructor, 1st step in object creation.
         Args:
@@ -33,6 +34,7 @@ class Statistics(db.Model):
         """
         self._xp = xp
         self._level = level
+        self._user = user
     # def __repr__(self):
     #     """
     #     The __repr__ method is a special method used to represent the object in a string format.
@@ -68,7 +70,7 @@ class Statistics(db.Model):
             "id": self.id,
             "xp": self._xp,
             "level": self._level,
-            
+            "user": self._user
         }
         return data
     def update(self, users):
@@ -103,6 +105,7 @@ class Statistics(db.Model):
         for sbuser_data in data:
             _ = sbuser_data.pop('id', None)
             xp = sbuser_data.get("xp", None)
+            user = sbuser_data.get("user", None)
             sbuser = Statistics.query.filter_by(_xp=xp).first()
             if sbuser:
                 sbuser.update(sbuser_data)
@@ -125,10 +128,10 @@ def initstats():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = Statistics(xp=5, level=2)
-        p2 = Statistics(xp=155, level=35)
-        p3 = Statistics(xp=0, level=1)
-        p4 = Statistics(xp=32, level=6)
+        p1 = Statistics(xp=5, level=2, user="user1")
+        p2 = Statistics(xp=155, level=35 , user="user2")
+        p3 = Statistics(xp=0, level=1 , user="user3")
+        p4 = Statistics(xp=32, level=6 , user="user4")
         for post in [p1, p2, p3, p4]:
             try:
                 post.create()
