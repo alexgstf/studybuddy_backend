@@ -52,7 +52,7 @@ def delete_user(id):
     return jsonify({'message': 'User deleted successfully'}), 200
 
 @sbuserapi.route('/api/updatesbuser/<int:id>', methods=['PUT'])
-def update_quote(id):
+def update_user(id):
     data = request.get_json()
     name = data.get('name')
     email = data.get('email')
