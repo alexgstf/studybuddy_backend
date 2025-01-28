@@ -53,5 +53,47 @@ class QuizAPI:
 
             return jsonify({"xp": user_stats._xp, "level": user_stats._level, "user": user})
 
+    # Endpoint to retrieve current user stats
+    class _GetUserStats(Resource):
+        def get(self):
+            user = request.args.get('user')
+            if not user:
+                return {"message": "User parameter is required"}, 400
+
+            user_stats = Statistics.query.filter_by(_user=user).first()
+            if not user_stats:
+                return {"message": "User not found"}, 404
+
+            return jsonify({"xp": user_stats._xp, "level": user_stats._level, "user": user})
+
+    # Endpoint to manually update or add user stats
+    class _UpdateUserStats(Resource):
+        def post(self):
+            data = request.json
+            user = data.get('user')
+            xp = data.get('xp')
+            level = data.get('level')
+
+            if not user:
+                return {"message": "User parameter is required"}, 400
+
+            user_stats = Statistics.query.filter_by(_user=user).first()
+            if not user_stats:
+                user_stats = Statistics(xp=0, level=1, user=user)
+                db.session.add(user_stats)
+
+            # Update the stats if provided
+            if xp is not None:
+                user_stats._xp = xp
+            if level is not None:
+                user_stats._level = level
+
+            # Save changes to the database
+            db.session.commit()
+
+            return jsonify({"message": "User stats updated", "xp": user_stats._xp, "level": user_stats._level, "user": user})
+
     # Register endpoints
     api.add_resource(_SubmitQuiz, '/userstats')
+    api.add_resource(_GetUserStats, '/userstats/get')
+    api.add_resource(_UpdateUserStats, '/userstats/update')
