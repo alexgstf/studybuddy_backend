@@ -35,7 +35,7 @@ def fetch_task_from_json():
     """
     return random.choice(TASKS)
 
-@tasks_api.route('/api/tasks/random', methods=['GET'])
+@tasks_api.route('/api/random-tasks', methods=['GET'])
 def random_task():
     """
     Endpoint to return a random task from the local JSON data.
