@@ -6,62 +6,62 @@ userquotes = Blueprint('userquotes', __name__)
 @userquotes.route('/api/userquotes', methods=['POST'])
 def add_user():
     data = request.get_json()
-    author = data.get('author')
-    quote = data.get('quote')
-    date = data.get('date')
+    title = data.get('title')
+    content = data.get('content')
+    subject = data.get('subject')
 
-    if not all([author, quote, date]):
+    if not all([title, content, subject]):
         return jsonify({'error': 'Missing data'}), 400
 
-    new_user = Quotes(author=author, quote=quote, date=date)
+    new_user = Quotes(title=title, content=content, subject=subject)
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'Quote added successfully'}), 201
+    return jsonify({'message': 'Notes added successfully'}), 201
 
 @userquotes.route('/api/userquotes', methods=['GET'])
 def get_quotes():
-    # Fetch all quotes from the database
-    quotes = Quotes.query.all()
+    # Fetch all contents from the database
+    contents = contents.query.all()
     result = [
         {
-            'id': quote.id,
-            'author': quote._author,
-            'quote': quote._quote,
-            'date': quote._date
+            'id': content.id,
+            'title': content._title,
+            'content': content._content,
+            'subject': content._subject
         }
-        for quote in quotes
+        for content in contents
     ]
     return jsonify(result), 200
 
 @userquotes.route('/api/userquotes/<int:id>', methods=['DELETE'])
 def delete_quote(id):
-    quote = Quotes.query.get(id)
-    if not quote:
-        return jsonify({'error': 'Quote not found'}), 404
+    content = Quotes.query.get(id)
+    if not content:
+        return jsonify({'error': 'Notes not found'}), 404
 
-    db.session.delete(quote)
+    db.session.delete(content)
     db.session.commit()
-    return jsonify({'message': 'Quote deleted successfully'}), 200
+    return jsonify({'message': 'Notes deleted successfully'}), 200
 
 @userquotes.route('/api/userquotes/<int:id>', methods=['PUT'])
 def update_quote(id):
     data = request.get_json()
-    author = data.get('author')
-    quote = data.get('quote')
-    date = data.get('date')
+    title = data.get('title')
+    content = data.get('content')
+    subject = data.get('subject')
 
-    if not all([author, quote, date]):
+    if not all([title, content, subject]):
         return jsonify({'error': 'Missing data'}), 400
 
-    existing_quote = Quotes.query.get(id)
-    if not existing_quote:
-        return jsonify({'error': 'Quote not found'}), 404
+    existing_content = Quotes.query.get(id)
+    if not existing_content:
+        return jsonify({'error': 'Notes not found'}), 404
 
-    existing_quote._author = author
-    existing_quote._quote = quote
-    existing_quote._date = date
+    existing_content._title = title
+    existing_content._content = content
+    existing_content._subject = subject
 
     db.session.commit()
 
-    return jsonify({'message': 'Quote updated successfully'}), 200
+    return jsonify({'message': 'Notes updated successfully'}), 200

@@ -17,11 +17,11 @@ class Quotes(db.Model):
     """
     __tablename__ = 'user_quotes'
     id = db.Column(db.Integer, primary_key=True)
-    _author = db.Column(db.String(255), nullable=False)
-    _quote = db.Column(db.String(255), nullable=False)
-    _date = db.Column(db.String(255), nullable=True)
+    _title = db.Column(db.String(255), nullable=False)
+    _content = db.Column(db.String(255), nullable=False)
+    _subject = db.Column(db.String(255), nullable=True)
    
-    def __init__(self, author, quote, date):
+    def __init__(self, title, content, subject):
         """
         Constructor, 1st step in object creation.
         Args:
@@ -31,9 +31,9 @@ class Quotes(db.Model):
             group_id (int): The group to which the post belongs.
             image_url (str): The url path to the image
         """
-        self._author = author
-        self._quote = quote
-        self._date = date
+        self._title = title
+        self._content = content
+        self._subject = subject
     # def __repr__(self):
     #     """
     #     The __repr__ method is a special method used to represent the object in a string format.
@@ -41,7 +41,7 @@ class Quotes(db.Model):
     #     Returns:
     #         str: A text representation of how to create the object.
     #     """
-    #     return f"Post(id={self.id}, title={self._name}, content={self._email}, user_id={self._date_of_birth}, post_id={self._city})"
+    #     return f"Post(id={self.id}, title={self._name}, content={self._email}, user_id={self._subject_of_birth}, post_id={self._city})"
     def create(self):
         """
         The create method adds the object to the database and commits the transaction.
@@ -67,9 +67,9 @@ class Quotes(db.Model):
         
         data = {
             "id": self.id,
-            "author": self._author,
-            "quote": self._quote,
-            "date": self._date
+            "title": self._title,
+            "content": self._content,
+            "subject": self._subject
         }
         return data
     def update(self, users):
@@ -103,8 +103,8 @@ class Quotes(db.Model):
     def restore(data):
         for sbuser_data in data:
             _ = sbuser_data.pop('id', None)
-            author = sbuser_data.get("author", None)
-            sbuser = Quotes.query.filter_by(_author=author).first()
+            title = sbuser_data.get("title", None)
+            sbuser = Quotes.query.filter_by(_title=title).first()
             if sbuser:
                 sbuser.update(sbuser_data)
             else:
@@ -126,12 +126,12 @@ def initquotes():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = Quotes(author='Franklin D. Roosevelt', quote='The only limit to our realization of tomorrow is our doubts of today.', date='1945')
-        p2 = Quotes(author='Nelson Mandela', quote='It always seems impossible until it is done.', date='1990')
-        p3 = Quotes(author='Albert Einstein', quote='Life is like riding a bicycle. To keep your balance you must keep moving.', date='1930')
-        p4 = Quotes(author='Mahatma Gandhi', quote='Be the change that you wish to see in the world.', date='1915')
-        p5 = Quotes(author='Winston Churchill', quote='Success is not final, failure is not fatal: It is the courage to continue that counts.', date='1941')
-        p6 = Quotes(author='Oscar Wilde', quote='Be yourself; everyone else is already taken.', date='1890')
+        p1 = Quotes(title='Franklin D. Roosevelt', content='The only limit to our realization of tomorrow is our doubts of today.', subject='1945')
+        p2 = Quotes(title='Nelson Mandela', content='It always seems impossible until it is done.', subject='1990')
+        p3 = Quotes(title='Albert Einstein', content='Life is like riding a bicycle. To keep your balance you must keep moving.', subject='1930')
+        p4 = Quotes(title='Mahatma Gandhi', content='Be the change that you wish to see in the world.', subject='1915')
+        p5 = Quotes(title='Winston Churchill', content='Success is not final, failure is not fatal: It is the courage to continue that counts.', subject='1941')
+        p6 = Quotes(title='Oscar Wilde', content='Be yourself; everyone else is already taken.', subject='1890')
 
         for post in [p1, p2, p3, p4, p5, p6]:
             try:
