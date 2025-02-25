@@ -30,7 +30,6 @@ def default_year():
 """ Database Models """
 
 ''' Tutorial: https://www.sqlalchemy.org/library.html#tutorials, try to get into Python shell and follow along '''
-
 class User(db.Model, UserMixin): #Class is used to store the information or code that we need.
     """
     User Model
@@ -48,6 +47,8 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         _password (Column): A string representing the hashed password of the user. It is not unique and cannot be null.
         _role (Column): A string representing the user's role within the application. Defaults to "User".
         _pfp (Column): A string representing the path to the user's profile picture. It can be null.
+        _dob (Column): A date representing the user's date of birth. It can be null.
+        _city (Column): A string representing the user's city. It can be null.
     """
     __tablename__ = 'users'
 # code starting from here is within the class and allows us to push things in and pull things out
@@ -59,10 +60,12 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
     _role = db.Column(db.String(20), default="User", nullable=False)
     _pfp = db.Column(db.String(255), unique=False, nullable=True)
     _car = db.Column(db.String(255), unique=False, nullable=True)
+    _dob = db.Column(db.String(255), unique=False, nullable=True)
+    _city = db.Column(db.String(255), unique=False, nullable=True)
    
     posts = db.relationship('Post', backref='author', lazy=True)
                                  
-    def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?'): # allows us to build this class which is a template
+    def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?', dob=None, city=None): # allows us to build this class which is a template
         """
         Constructor, 1st step in object creation.
         
@@ -72,6 +75,8 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
             password (str): The password for the user.
             role (str): The role of the user within the application. Defaults to "User".
             pfp (str): The path to the user's profile picture. Defaults to an empty string.
+            dob (date): The date of birth of the user. Defaults to None.
+            city (str): The city of the user. Defaults to None.
         """
         self._name = name
         self._uid = uid
@@ -80,6 +85,8 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         self._role = role
         self._pfp = pfp
         self._car = car
+        self._dob = dob
+        self._city = city
 
     # UserMixin/Flask-Login requires a get_id method to return the id as a string
     def get_id(self):
@@ -142,16 +149,47 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         Args:
             email (str): The new email for the user.
         """
-        if email is None or email == "":
-            self._email = "?"
-        else:
-            self._email = email
+        self._email = email
+
+    @property
+    def dob(self):
+        """
+        Gets the user's date of birth.
         
-    def set_email(self):
+        Returns:
+            date: The user's date of birth.
         """
-        Sets the email of the user based on the UID 
+        return self._dob
+
+    @dob.setter
+    def dob(self, dob):
         """
-        self.email = "?"
+        Sets the user's date of birth.
+        
+        Args:
+            dob (date): The new date of birth for the user.
+        """
+        self._dob = dob
+
+    @property
+    def city(self):
+        """
+        Gets the user's city.
+        
+        Returns:
+            str: The user's city.
+        """
+        return self._city
+
+    @city.setter
+    def city(self, city):
+        """
+        Sets the user's city.
+        
+        Args:
+            city (str): The new city for the user.
+        """
+        self._city = city
 
     @property
     def name(self):
@@ -336,7 +374,9 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
             "email": self.email,
             "role": self._role,
             "pfp": self._pfp,
-            "car": self._car
+            "car": self._car,
+            "dob": self._dob,
+            "city": self._city
         }
         return data
         
@@ -357,6 +397,9 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         uid = inputs.get("uid", "")
         password = inputs.get("password", "")
         pfp = inputs.get("pfp", None)
+        email = inputs.get("email", "")
+        dob = inputs.get("dob", None)
+        city = inputs.get("city", "")
 
         # Update table with new data
         if name:
@@ -367,9 +410,12 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
             self.set_password(password)
         if pfp is not None:
             self.pfp = pfp
-
-        # Check this on each update
-        self.set_email()
+        if email:
+            self.email = email
+        if dob:
+            self.dob = dob
+        if city:
+            self.city = city
 
         try:
             db.session.commit()
@@ -504,14 +550,14 @@ def initUsers():
         db.create_all()
         """Tester data for table"""
         
-        u1 = User(name='Thomas Edison', uid=app.config['ADMIN_USER'], password=app.config['ADMIN_PASSWORD'], pfp='toby.png', car='toby_car.png', role="Admin")
-        u2 = User(name='Grace Hopper', uid=app.config['DEFAULT_USER'], password=app.config['DEFAULT_PASSWORD'], pfp='hop.png')
-        u3 = User(name='Nicholas Tesla', uid='niko', password='123niko', pfp='niko.png' )
-        u4 = User(name='Albert Einstein', uid='albert', password='123albert')
-        u5 = User(name='Darsh Darsh' , uid='darsh' , password='darshdarsh')
-        u6 = User(name='Alejandro Rubio' , uid='alejandro' , password='alejandro')
-        u7 = User(name='Marti Jorba', uid='marti', password='martijorba')
-        u8 = User(name='Travis Callow', uid='travis', password='travis123')
+        u1 = User(name='Thomas Edison', uid=app.config['ADMIN_USER'], password=app.config['ADMIN_PASSWORD'], pfp='toby.png', car='toby_car.png', role="Admin", email='thomas.edison@example.com', dob='1847-02-11', city='Milan')
+        u2 = User(name='Grace Hopper', uid=app.config['DEFAULT_USER'], password=app.config['DEFAULT_PASSWORD'], pfp='hop.png', email='grace.hopper@example.com', dob='1906-12-09', city='New York')
+        u3 = User(name='Nicholas Tesla', uid='niko', password='123niko', pfp='niko.png', email='nicholas.tesla@example.com', dob='1856-07-10', city='Smiljan')
+        u4 = User(name='Alex Gustaf', uid='alex', password='alexgustaf', email='alexgustaf@example.com', dob='1879-03-14', city='Ulm')
+        u5 = User(name='Darsh Darsh', uid='darsh', password='darshdarsh', email='darsh.darsh@example.com', dob='1990-01-01', city='San Francisco')
+        u6 = User(name='Alejandro Rubio', uid='alejandro', password='alejandro', email='alejandro.rubio@example.com', dob='1985-05-15', city='Madrid')
+        u7 = User(name='Marti Jorba', uid='marti', password='martijorba', email='marti.jorba@example.com', dob='1992-08-22', city='Barcelona')
+        u8 = User(name='Travis Callow', uid='travis', password='travis123', email='travis.callow@example.com', dob='1988-11-30', city='Los Angeles')
         users = [u1, u2, u3, u4, u5, u6, u7, u8]
         
         for user in users:
