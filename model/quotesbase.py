@@ -126,12 +126,12 @@ def initquotes():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        p1 = Quotes(author='Franklin D. Roosevelt', quote='The only limit to our realization of tomorrow is our doubts of today.', date='1945')
-        p2 = Quotes(author='Nelson Mandela', quote='It always seems impossible until it is done.', date='1990')
-        p3 = Quotes(author='Albert Einstein', quote='Life is like riding a bicycle. To keep your balance you must keep moving.', date='1930')
-        p4 = Quotes(author='Mahatma Gandhi', quote='Be the change that you wish to see in the world.', date='1915')
-        p5 = Quotes(author='Winston Churchill', quote='Success is not final, failure is not fatal: It is the courage to continue that counts.', date='1941')
-        p6 = Quotes(author='Oscar Wilde', quote='Be yourself; everyone else is already taken.', date='1890')
+        p1 = Quotes(author='Theory of Relativity', quote='The theory of relativity explains how gravity works and revolutionized our understanding of space-time.', date='Physics')
+        p2 = Quotes(author='Industrial Revolution', quote='The industrial revolution greatly shaped modern societies and economies, leading to advancements in technology and urbanization.', date='History')
+        p3 = Quotes(author='Algorithms and Data Structures', quote='Understanding algorithms and data structures is key to solving computational problems efficiently.', date='Computer Science')
+        p4 = Quotes(author='Ethical Reasoning', quote='Ethical reasoning helps us navigate moral dilemmas and understand what it means to live a good life.', date='Philosophy')
+        p5 = Quotes(author='Renaissance Art', quote='The Renaissance marked a cultural rebirth in Europe, leading to significant changes in art, architecture, and thought.', date='Art History')
+        p6 = Quotes(author='Supply and Demand', quote='Supply and demand are fundamental concepts in economics that drive market behavior and prices.', date='Economics')
 
         for post in [p1, p2, p3, p4, p5, p6]:
             try:
