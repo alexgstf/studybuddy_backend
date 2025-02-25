@@ -127,6 +127,14 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/quotes')
+@login_required
+def quotes():
+    # Fetch all the quotes from the database
+    all_quotes = Quotes.query.all()  # Fetch all quotes
+    return render_template('quotes_page.html', quotes=all_quotes)
+
+
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
     # note that we set the 404 status explicitly

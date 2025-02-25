@@ -1,0 +1,150 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Quotes Management</h1>
+    <table class="table table-striped" id="quotesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Author</th>
+                <th>Quote</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quote in quotes %}
+            <tr>
+                <td>{{ quote.id }}</td>
+                <td>{{ quote._author }}</td>
+                <td>{{ quote._quote }}</td>
+                <td>{{ quote._date }}</td>
+                <td>
+                    <button class="btn btn-primary edit-btn" data-id="{{ quote.id }}">Edit</button>
+                    <button class="btn btn-danger delete-btn" data-id="{{ quote.id }}">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for edit form -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Quote</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editQuoteForm">
+                    <input type="hidden" id="quoteId">
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <input type="text" class="form-control" id="author">
+                    </div>
+                    <div class="form-group">
+                        <label for="quoteText">Quote</label>
+                        <textarea class="form-control" id="quoteText"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="text" class="form-control" id="date">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Quote</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this quote?</p>
+                <input type="hidden" id="deleteQuoteId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block background %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const quoteId = this.getAttribute('data-id');
+                // Fetch the quote details (you may need to fetch from the server in a real app)
+                const quote = {
+                    author: 'Sample Author',
+                    quote: 'Sample Quote',
+                    date: '2025-02-24'
+                };
+                document.getElementById('quoteId').value = quoteId;
+                document.getElementById('author').value = quote.author;
+                document.getElementById('quoteText').value = quote.quote;
+                document.getElementById('date').value = quote.date;
+
+                $('#editModal').modal('show');
+            });
+        });
+
+        document.getElementById('saveChanges').addEventListener('click', function() {
+            const quoteId = document.getElementById('quoteId').value;
+            const updatedData = {
+                author: document.getElementById('author').value,
+                quote: document.getElementById('quoteText').value,
+                date: document.getElementById('date').value
+            };
+
+            // Simulate updating UI (replace with actual fetch request)
+            updateQuoteData(quoteId, updatedData);
+        });
+
+        function updateQuoteData(quoteId, updatedData) {
+            // Update the quote in the table (simulate this for now)
+            document.querySelector(`button[data-id="${quoteId}"]`).closest('tr').querySelector('td:nth-child(2)').textContent = updatedData.author;
+            document.querySelector(`button[data-id="${quoteId}"]`).closest('tr').querySelector('td:nth-child(3)').textContent = updatedData.quote;
+            document.querySelector(`button[data-id="${quoteId}"]`).closest('tr').querySelector('td:nth-child(4)').textContent = updatedData.date;
+
+            $('#editModal').modal('hide');
+        }
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const quoteId = this.getAttribute('data-id');
+                document.getElementById('deleteQuoteId').value = quoteId;
+                $('#deleteModal').modal('show');
+            });
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            const quoteId = document.getElementById('deleteQuoteId').value;
+
+            // Simulate delete action (replace with actual fetch)
+            console.log("Deleting quote with ID:", quoteId);
+            document.querySelector(`button[data-id="${quoteId}"]`).closest('tr').remove();
+            $('#deleteModal').modal('hide');
+        });
+    });
+</script>
+{% endblock %}
+b
