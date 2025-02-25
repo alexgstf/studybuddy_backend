@@ -6,29 +6,28 @@ userquotes = Blueprint('userquotes', __name__)
 @userquotes.route('/api/userquotes', methods=['POST'])
 def add_user():
     data = request.get_json()
-    author = data.get('author')
-    quote = data.get('quote')
-    date = data.get('date')
+    title = data.get('title')  # Changed from 'author' to 'title'
+    content = data.get('content')  # Changed from 'quote' to 'content'
+    subject = data.get('subject')  # Changed from 'date' to 'subject'
 
-    if not all([author, quote, date]):
+    if not all([title, content, subject]):
         return jsonify({'error': 'Missing data'}), 400
 
-    new_user = Quotes(author=author, quote=quote, date=date)
-    db.session.add(new_user)
+    new_quote = Quotes(title=title, content=content, subject=subject)
+    db.session.add(new_quote)
     db.session.commit()
 
     return jsonify({'message': 'Quote added successfully'}), 201
 
 @userquotes.route('/api/userquotes', methods=['GET'])
 def get_quotes():
-    # Fetch all quotes from the database
     quotes = Quotes.query.all()
     result = [
         {
             'id': quote.id,
-            'author': quote._author,
-            'quote': quote._quote,
-            'date': quote._date
+            'title': quote._title,  # Changed from '_author' to '_title'
+            'content': quote._content,  # Changed from '_quote' to '_content'
+            'subject': quote._subject  # Changed from '_date' to '_subject'
         }
         for quote in quotes
     ]
@@ -47,20 +46,20 @@ def delete_quote(id):
 @userquotes.route('/api/userquotes/<int:id>', methods=['PUT'])
 def update_quote(id):
     data = request.get_json()
-    author = data.get('author')
-    quote = data.get('quote')
-    date = data.get('date')
+    title = data.get('title')  # Changed from 'author' to 'title'
+    content = data.get('content')  # Changed from 'quote' to 'content'
+    subject = data.get('subject')  # Changed from 'date' to 'subject'
 
-    if not all([author, quote, date]):
+    if not all([title, content, subject]):
         return jsonify({'error': 'Missing data'}), 400
 
     existing_quote = Quotes.query.get(id)
     if not existing_quote:
         return jsonify({'error': 'Quote not found'}), 404
 
-    existing_quote._author = author
-    existing_quote._quote = quote
-    existing_quote._date = date
+    existing_quote._title = title  # Changed from '_author' to '_title'
+    existing_quote._content = content  # Changed from '_quote' to '_content'
+    existing_quote._subject = subject  # Changed from '_date' to '_subject'
 
     db.session.commit()
 
