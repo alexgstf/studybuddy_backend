@@ -30,8 +30,7 @@ def add_task():
 # READ - Get all tasks for the logged-in user
 @addtaskapi.route('/api/tasks', methods=['GET'])
 def get_tasks():
-    data = request.get_json()
-    user_id = data.get('user_id')  # Get user_id from request body
+    user_id = request.args.get('user_id')  # Get user_id from query params
 
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
@@ -46,8 +45,7 @@ def get_tasks():
 # READ - Get a single task by ID for a specific user
 @addtaskapi.route('/api/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    data = request.get_json()
-    user_id = data.get('user_id')  # Get user_id from request body
+    user_id = request.args.get('user_id')  # Get user_id from query params
 
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400

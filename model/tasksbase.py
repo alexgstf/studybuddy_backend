@@ -16,6 +16,9 @@ class Task(db.Model):
     _task = db.Column(db.String(255), nullable=False, unique=True)
     _user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Link to User model
 
+    # Establishing relationship with User model
+    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
+
     def __init__(self, task, user_id):
         """
         Constructor, initializes a task.
@@ -83,15 +86,16 @@ class Task(db.Model):
         Restores tasks from given data.
         """
         for task_data in data:
-            _ = task_data.pop('id', None)
+            _ = task_data.pop('id', None)  # Remove 'id' to allow task to be added as a new task
             task = task_data.get("task", None)
             user_id = task_data.get("user_id", None)
 
+            # Check if the task already exists for this user
             existing_task = Task.query.filter_by(_task=task, _user_id=user_id).first()
             if existing_task:
-                existing_task.update(task_data)
+                existing_task.update(task_data)  # Update if task exists
             else:
-                new_task = Task(**task_data)
+                new_task = Task(**task_data)  # Create new task if it doesn't exist
                 new_task.create()
 
 # Function to initialize sample tasks
@@ -100,7 +104,7 @@ def inittasks():
     Initializes database with sample tasks.
     """
     with app.app_context():
-        db.create_all()
+        db.create_all()  # Create tables
 
         # Sample tasks
         tasks = [
