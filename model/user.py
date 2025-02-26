@@ -59,13 +59,12 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
     _password = db.Column(db.String(255), unique=False, nullable=False)
     _role = db.Column(db.String(20), default="User", nullable=False)
     _pfp = db.Column(db.String(255), unique=False, nullable=True)
-    _car = db.Column(db.String(255), unique=False, nullable=True)
     _dob = db.Column(db.String(255), unique=False, nullable=True)
     _city = db.Column(db.String(255), unique=False, nullable=True)
    
     posts = db.relationship('Post', backref='author', lazy=True)
                                  
-    def __init__(self, name, uid, password="", role="User", pfp='', car='', email='?', dob=None, city=None): # allows us to build this class which is a template
+    def __init__(self, name, uid, password="", role="User", pfp='', email='', dob='', city=''): # allows us to build this class which is a template
         """
         Constructor, 1st step in object creation.
         
@@ -84,7 +83,6 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         self.set_password(password)
         self._role = role
         self._pfp = pfp
-        self._car = car
         self._dob = dob
         self._city = city
 
@@ -334,12 +332,6 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         """
         self._pfp = pfp
 
-    @property
-    def car(self):
-        return self._car
-    @car.setter
-    def car(self, car):
-        self._car = car
     def create(self, inputs=None):
         """
         Adds a new record to the table and commits the transaction.
@@ -374,7 +366,6 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
             "email": self.email,
             "role": self._role,
             "pfp": self._pfp,
-            "car": self._car,
             "dob": self._dob,
             "city": self._city
         }
@@ -464,32 +455,6 @@ class User(db.Model, UserMixin): #Class is used to store the information or code
         self.pfp = None
         db.session.commit()
         
-    def save_car(self, image_data, filename):
-        """
-        Saves the user's car picture.
-        
-        Args:
-            image_data (bytes): The image data of the car picture.
-            filename (str): The filename of the car picture.
-        """
-        try:
-            user_dir = os.path.join(app.config['UPLOAD_FOLDER'], self.uid)
-            if not os.path.exists(user_dir):
-                os.makedirs(user_dir)
-            file_path = os.path.join(user_dir, filename)
-            with open(file_path, 'wb') as img_file:
-                img_file.write(image_data)
-            self.update({"car": filename})
-        except Exception as e:
-            raise e
-        
-    def delete_car(self):
-        """
-        Deletes the user's profile picture from the user record.
-        """
-        self.car = None
-        db.session.commit()
-        
     def set_uid(self, new_uid=None):
         """
         Updates the user's directory based on the new UID provided.
@@ -550,7 +515,7 @@ def initUsers():
         db.create_all()
         """Tester data for table"""
         
-        u1 = User(name='Thomas Edison', uid=app.config['ADMIN_USER'], password=app.config['ADMIN_PASSWORD'], pfp='toby.png', car='toby_car.png', role="Admin", email='thomas.edison@example.com', dob='1847-02-11', city='Milan')
+        u1 = User(name='Thomas Edison', uid=app.config['ADMIN_USER'], password=app.config['ADMIN_PASSWORD'], pfp='toby.png', role="Admin", email='thomas.edison@example.com', dob='1847-02-11', city='Milan')
         u2 = User(name='Grace Hopper', uid=app.config['DEFAULT_USER'], password=app.config['DEFAULT_PASSWORD'], pfp='hop.png', email='grace.hopper@example.com', dob='1906-12-09', city='New York')
         u3 = User(name='Nicholas Tesla', uid='niko', password='123niko', pfp='niko.png', email='nicholas.tesla@example.com', dob='1856-07-10', city='Smiljan')
         u4 = User(name='Alex Gustaf', uid='alex', password='alexgustaf', email='alexgustaf@example.com', dob='1879-03-14', city='Ulm')
