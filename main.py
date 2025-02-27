@@ -134,6 +134,15 @@ def quotes():
     all_quotes = Quotes.query.all()  # Fetch all quotes
     return render_template('quotes_page.html', quotes=all_quotes)
 
+@app.route('/facts')
+@login_required
+def facts_page():
+    # Fetch all facts from the database
+    all_facts = Facts.query.all()  # Fetch all facts
+
+    return render_template('facts_page.html', facts=all_facts)
+
+
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
