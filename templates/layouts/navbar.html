@@ -22,7 +22,16 @@ This HTML is setup as a fragment allowing it to be "included" by other HTML file
                             <li><a class="dropdown-item" href={{ url_for('u2table') }}>User Management 2</a></li>
                         </ul>
                     </div>
-                    
+                    <!-- Add the Repositories dropdown here -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarReposDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Repositories
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarReposDropdown">
+                            <li><a class="dropdown-item" href="https://github.com/alexgstf/studybuddy_backend" target="_blank">Backend</a></li>
+                            <li><a class="dropdown-item" href="https://github.com/alexgstf/studybuddy_frontend" target="_blank">Frontend</a></li>
+                        </ul>
+                    </div>                    
                     <!-- Add the link to quotes here -->
                     <a class="nav-link" href="{{ url_for('quotes') }}">Notes</a>
                 </div>
