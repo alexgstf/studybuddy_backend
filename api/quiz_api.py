@@ -66,6 +66,23 @@ class QuizAPI:
 
             return jsonify({"xp": user_stats._xp, "level": user_stats._level, "user": user})
 
+    class _GetLeaderStats(Resource):
+        def get(self):
+            users = Statistics.query.all()  # Get all user stats
+            if not users:
+                return {"message": "No users found"}, 404
+
+            leaderboard = []
+            for user_stats in users:
+                leaderboard.append({
+                    "username": user_stats._user,
+                    "xp": user_stats._xp,
+                    "level": user_stats._level
+                })
+
+            return jsonify(leaderboard)
+
+
     # Endpoint to manually update or add user stats
     class _UpdateUserStats(Resource):
         def post(self):
@@ -95,5 +112,6 @@ class QuizAPI:
 
     # Register endpoints
     api.add_resource(_SubmitQuiz, '/userstats')
+    api.add_resource(_GetLeaderStats, '/userstats/leaderboard')
     api.add_resource(_GetUserStats, '/userstats/get')
     api.add_resource(_UpdateUserStats, '/userstats/update')
