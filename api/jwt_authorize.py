@@ -32,7 +32,9 @@ def token_required(roles=None):
     def decorator(func_to_guard):
         @wraps(func_to_guard)
         def decorated(*args, **kwargs):
-            token = request.cookies.get(current_app.config["JWT_TOKEN_NAME"])
+            token = request.headers.get("Authorization")
+            if token and token.startswith("Bearer "):
+                token = token.split(" ")[1]
             if not token:
                 return {
                     "message": "Token is missing",
